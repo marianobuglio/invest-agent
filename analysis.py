@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 import yfinance as yf
 import pandas as pd
 
@@ -43,34 +44,46 @@ def macd_cross_recent(macd_line, signal_line, lookback=5):
     return None
 
 
-def momento(row):
-    parts = []
+def trend_zone(row):
+    return "alcista" if row["SMA50"] > row["SMA200"] else "bajista"
 
-    # tendencia de fondo
-    if row["SMA50"] > row["SMA200"]:
-        parts.append("tendencia de fondo alcista")
-    else:
-        parts.append("tendencia de fondo bajista")
 
-    # posicion en rango 52 semanas
+def drawdown_band(row):
     if row["% vs max 52w"] > -5:
-        parts.append("cerca de máximos de 52 semanas")
+        return "cerca_maximos"
     elif row["% vs max 52w"] > -20:
-        parts.append("corrección moderada desde máximos")
-    else:
-        parts.append("caída profunda desde máximos")
+        return "correccion_moderada"
+    return "caida_profunda"
 
-    # momentum
+
+def rsi_zone(row):
     if row["RSI14"] > 70:
-        parts.append("sobrecomprado")
+        return "sobrecomprado"
     elif row["RSI14"] < 35:
-        parts.append("sobrevendido")
-    else:
-        parts.append("momentum neutral")
+        return "sobrevendido"
+    return "neutral"
 
+
+DRAWDOWN_LABEL = {
+    "cerca_maximos": "cerca de máximos de 52 semanas",
+    "correccion_moderada": "corrección moderada desde máximos",
+    "caida_profunda": "caída profunda desde máximos",
+}
+RSI_LABEL = {
+    "sobrecomprado": "sobrecomprado",
+    "sobrevendido": "sobrevendido",
+    "neutral": "momentum neutral",
+}
+
+
+def momento(row):
+    parts = [
+        f"tendencia de fondo {row['Tendencia']}",
+        DRAWDOWN_LABEL[row["Banda 52w"]],
+        RSI_LABEL[row["Zona RSI"]],
+    ]
     if row["MACD cross"]:
         parts.append(row["MACD cross"])
-
     return ", ".join(parts)
 
 
@@ -111,6 +124,9 @@ for ticker, name in TICKERS.items():
         "MACD cross": cross,
         "Volatilidad (ATR%)": round(atr_pct, 1),
     }
+    row["Tendencia"] = trend_zone(row)
+    row["Banda 52w"] = drawdown_band(row)
+    row["Zona RSI"] = rsi_zone(row)
     row["Momento"] = momento(row)
     rows.append(row)
 
@@ -119,3 +135,9 @@ pd.set_option("display.width", 200)
 pd.set_option("display.max_colwidth", 80)
 print(df.to_string(index=False))
 df.to_csv("analysis_result.csv", index=False)
+
+with open("docs/data.json", "w") as f:
+    json.dump({
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "tickers": rows,
+    }, f, ensure_ascii=False, indent=2, default=lambda x: None if pd.isna(x) else x)

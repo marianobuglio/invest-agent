@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>cartera — bitácora</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📓</text></svg>" />
+<style>
+
+@font-face {
+  font-family: 'Fraunces';
+  src: local('Fraunces');
+}
+
+:root{
+  --bg: oklch(16% 0.014 260);
+  --bg-raised: oklch(20% 0.016 260);
+  --ink: oklch(92% 0.01 260);
+  --ink-dim: oklch(68% 0.014 260);
+  --ink-faint: oklch(48% 0.014 260);
+  --line: oklch(30% 0.018 260);
+  --accent: oklch(72% 0.14 55);
+  --accent-dim: oklch(50% 0.09 55);
+  --up: oklch(70% 0.13 155);
+  --down: oklch(68% 0.16 25);
+  --serif: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+*{ box-sizing: border-box; }
+
+html{ color-scheme: dark; }
+
+body{
+  margin: 0;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, oklch(24% 0.03 55 / 0.35), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: clamp(1.5rem, 5vw, 5rem) clamp(1.25rem, 6vw, 6rem) 6rem;
+}
+
+.masthead{
+  max-width: 74rem;
+  margin: 0 auto clamp(2.5rem, 6vw, 4.5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.5rem;
+}
+
+.masthead h1{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-style: italic;
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.masthead .kicker{
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.masthead .meta{
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.masthead .meta strong{
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+
+main{
+  max-width: 74rem;
+  margin: 0 auto;
+}
+
+.lede{
+  max-width: 42rem;
+  color: var(--ink-dim);
+  font-size: 0.98rem;
+  margin: 0 0 clamp(2.5rem, 5vw, 4rem);
+}
+
+.lede strong{ color: var(--ink); font-weight: 600; }
+
+.section-label{
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 3rem 0 1.25rem;
+}
+
+.section-label::after{
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.entries{
+  display: flex;
+  flex-direction: column;
+}
+
+.entry{
+  display: grid;
+  grid-template-columns: 9rem 1fr auto;
+  gap: 1.5rem 2rem;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+
+.entry:first-child{ padding-top: 0; }
+
+.entry .id{
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.entry .ticker{
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.entry .company{
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+
+.entry .price{
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.4rem;
+}
+
+.entry .narrative{
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+  max-width: 38rem;
+}
+
+.entry .narrative .flag{
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.entry .narrative .flag.hot{ color: var(--accent); }
+
+.tags{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.tag{
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  padding: 0.22rem 0.55rem;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.tag.cross-up{ border-color: color-mix(in oklch, var(--up) 50%, var(--line)); color: var(--up); }
+.tag.cross-down{ border-color: color-mix(in oklch, var(--down) 50%, var(--line)); color: var(--down); }
+.tag.overbought{ border-color: color-mix(in oklch, var(--down) 40%, var(--line)); color: color-mix(in oklch, var(--down) 70%, var(--ink-dim)); }
+.tag.oversold{ border-color: color-mix(in oklch, var(--up) 40%, var(--line)); color: color-mix(in oklch, var(--up) 70%, var(--ink-dim)); }
+
+.stat{
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.stat .drawdown{
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.stat .drawdown.deep{ color: var(--down); }
+.stat .drawdown.mild{ color: var(--ink); }
+.stat .drawdown.top{ color: var(--ink-faint); }
+
+.stat .rsi{
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  margin-top: 0.3rem;
+}
+
+footer{
+  max-width: 74rem;
+  margin: 4rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.loading, .error{
+  color: var(--ink-faint);
+  font-style: italic;
+  font-family: var(--serif);
+  padding: 3rem 0;
+}
+
+@media (max-width: 680px){
+  .entry{
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .stat{ text-align: left; }
+  .masthead{ flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .masthead .meta{ text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div>
+    <div class="kicker">cuaderno de inversión</div>
+    <h1>la cartera</h1>
+  </div>
+  <div class="meta" id="meta">cargando…</div>
+</div>
+
+<main>
+  <p class="lede">Lectura técnica de las empresas que vengo siguiendo — no son recomendaciones, es el estado de cada una hoy: <strong>qué tan lejos está de sus máximos</strong>, si el momentum viene sobrecomprado o recién girando, y si el MACD marcó algo nuevo esta semana.</p>
+
+  <div id="app">
+    <div class="loading">trayendo los datos…</div>
+  </div>
+</main>
+
+<footer>
+  <span>actualizado por un job diario · sin ejecución automática de órdenes</span>
+  <span>fuente: yfinance</span>
+</footer>
+
+<script>
+const DRAWDOWN_CLASS = { caida_profunda: 'deep', correccion_moderada: 'mild', cerca_maximos: 'top' };
+const DRAWDOWN_WORD = { caida_profunda: 'caída profunda', correccion_moderada: 'corrección', cerca_maximos: 'cerca de máximos' };
+
+function fmtPct(n){
+  const sign = n > 0 ? '+' : '';
+  return `${sign}${n.toFixed(1)}%`;
+}
+
+function narrativeFor(t){
+  const bits = [];
+  bits.push(`Tendencia de fondo <span class="flag">${t.Tendencia === 'alcista' ? 'alcista' : 'bajista'}</span>`);
+  bits.push(`${DRAWDOWN_WORD[t['Banda 52w']]} desde el máximo de 52 semanas (${fmtPct(t['% vs max 52w'])})`);
+  if (t['Zona RSI'] === 'sobrecomprado') bits.push(`<span class="flag hot">RSI sobrecomprado</span> (${t.RSI14})`);
+  else if (t['Zona RSI'] === 'sobrevendido') bits.push(`<span class="flag hot">RSI sobrevendido</span> (${t.RSI14})`);
+  else bits.push(`RSI neutral (${t.RSI14})`);
+  return bits.join(' — ') + '.';
+}
+
+function tagsFor(t){
+  const tags = [];
+  if (t['MACD cross']) {
+    const up = t['MACD cross'].includes('alcista');
+    tags.push(`<span class="tag ${up ? 'cross-up' : 'cross-down'}">${up ? '↑' : '↓'} cruce MACD ${up ? 'alcista' : 'bajista'}</span>`);
+  }
+  if (t['Zona RSI'] === 'sobrecomprado') tags.push(`<span class="tag overbought">RSI &gt; 70</span>`);
+  if (t['Zona RSI'] === 'sobrevendido') tags.push(`<span class="tag oversold">RSI &lt; 35</span>`);
+  tags.push(`<span class="tag">ATR ${t['Volatilidad (ATR%)']}%</span>`);
+  return tags.join('');
+}
+
+function render(data){
+  const app = document.getElementById('app');
+  const meta = document.getElementById('meta');
+
+  const d = new Date(data.generated_at);
+  meta.innerHTML = `última corrida<br><strong>${d.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>`;
+
+  // most-interesting-first: deep drawdown + recent cross first, near-highs last
+  const rank = t => {
+    let score = 0;
+    if (t['MACD cross']) score += 10;
+    if (t['Banda 52w'] === 'caida_profunda') score += 5;
+    if (t['Banda 52w'] === 'correccion_moderada') score += 2;
+    if (t['Zona RSI'] !== 'neutral') score += 1;
+    return -score;
+  };
+  const sorted = [...data.tickers].sort((a, b) => rank(a) - rank(b));
+
+  const entries = sorted.map(t => `
+    <div class="entry">
+      <div class="id">
+        <div class="ticker">${t.Ticker}</div>
+        <div class="company">${t.Empresa}</div>
+        <div class="price">$${t.Precio.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+      </div>
+      <div class="narrative">
+        ${narrativeFor(t)}
+        <div class="tags">${tagsFor(t)}</div>
+      </div>
+      <div class="stat">
+        <div class="drawdown ${DRAWDOWN_CLASS[t['Banda 52w']]}">${fmtPct(t['% vs max 52w'])}</div>
+        <div class="rsi">vs máx. 52w</div>
+      </div>
+    </div>
+  `).join('');
+
+  app.innerHTML = `
+    <div class="section-label">watchlist — ${data.tickers.length} empresas</div>
+    <div class="entries">${entries}</div>
+  `;
+}
+
+fetch('data.json?t=' + Date.now())
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(err => {
+    document.getElementById('app').innerHTML = `<div class="error">no pude cargar data.json (${err.message}) — ¿corrió ya el job diario?</div>`;
+  });
+</script>
+
+</body>
+</html>
