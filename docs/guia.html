@@ -36,13 +36,13 @@ body{
     var(--bg);
   color: var(--ink);
   font-family: var(--sans);
-  line-height: 1.6;
+  line-height: 1.65;
   min-height: 100vh;
   padding: clamp(1.5rem, 5vw, 5rem) clamp(1.25rem, 6vw, 6rem) 6rem;
 }
 
 .masthead{
-  max-width: 42rem;
+  max-width: 40rem;
   margin: 0 auto clamp(2.5rem, 6vw, 4rem);
   border-bottom: 1px solid var(--line);
   padding-bottom: 1.5rem;
@@ -69,18 +69,18 @@ body{
   font-family: var(--serif);
   font-weight: 500;
   font-style: italic;
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
   margin: 0.35rem 0 0;
   letter-spacing: -0.01em;
 }
 
 article{
-  max-width: 42rem;
+  max-width: 40rem;
   margin: 0 auto;
 }
 
 article > p.intro{
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   color: var(--ink-dim);
 }
 article > p.intro strong{ color: var(--ink); font-weight: 600; }
@@ -88,26 +88,23 @@ article > p.intro strong{ color: var(--ink); font-weight: 600; }
 h2{
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin: 3rem 0 1rem;
   letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
-h2 .num{
-  color: var(--accent);
-  font-style: italic;
-  margin-right: 0.5rem;
-}
-
-p{ color: var(--ink-dim); margin: 0.9rem 0; }
+p{ color: var(--ink-dim); margin: 0.9rem 0; font-size: 1rem; }
 p strong{ color: var(--ink); font-weight: 600; }
-code{
+
+.aside{
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  margin-top: 0.5rem;
+}
+.aside code{
   font-family: ui-monospace, monospace;
-  font-size: 0.85em;
-  color: var(--accent);
-  background: var(--bg-raised);
-  padding: 0.1em 0.4em;
-  border-radius: 3px;
+  color: var(--ink-faint);
 }
 
 .example{
@@ -115,15 +112,15 @@ code{
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 1.25rem 1.5rem;
-  margin: 1.25rem 0;
-  font-size: 0.92rem;
+  margin: 1.5rem 0;
+  font-size: 0.96rem;
 }
 .example .label{
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 .example .ticker{
   font-family: var(--serif);
@@ -131,10 +128,7 @@ code{
   font-size: 1.1rem;
   color: var(--ink);
 }
-
-ul{ padding-left: 1.2rem; color: var(--ink-dim); }
-li{ margin: 0.4rem 0; }
-li strong{ color: var(--ink); }
+.example p{ margin: 0.6rem 0 0; }
 
 .zone-up{ color: var(--up); font-weight: 600; }
 .zone-down{ color: var(--down); font-weight: 600; }
@@ -144,22 +138,18 @@ li strong{ color: var(--ink); }
   padding: 0.9rem 1.25rem;
   margin: 2.5rem 0;
   background: color-mix(in oklch, var(--accent) 6%, transparent);
-  font-size: 0.92rem;
+  font-size: 0.96rem;
   color: var(--ink-dim);
 }
 .callout strong{ color: var(--ink); }
 
 footer{
-  max-width: 42rem;
+  max-width: 40rem;
   margin: 4rem auto 0;
   padding-top: 1.5rem;
   border-top: 1px solid var(--line);
   font-size: 0.76rem;
   color: var(--ink-faint);
-}
-
-@media (max-width: 680px){
-  body{ padding-top: 2rem; }
 }
 </style>
 </head>
@@ -168,57 +158,55 @@ footer{
 <div class="masthead">
   <a class="back" href="index.html">← volver a la cartera</a>
   <div class="kicker">guía de lectura</div>
-  <h1>qué significa cada cosa</h1>
+  <h1>te lo explico como si te sentaras al lado mío</h1>
 </div>
 
 <article>
-  <p class="intro">Esto no es análisis fundamental ni recomendación de compra — es <strong>lectura de precio y momentum</strong>: dónde está cada acción respecto a su propio historial reciente, y si el impulso de corto plazo viene a favor o en contra. Cuatro preguntas, en este orden.</p>
+  <p class="intro">Nada de esto es una recomendación de "comprá esto". Es simplemente: <strong>mirar cómo viene viniendo cada empresa últimamente</strong>, para decidir si vale la pena prestarle atención esta semana o no. Son cuatro preguntas que me hago con cada una, en este orden.</p>
 
-  <h2><span class="num">1</span>¿La tendencia de fondo es a favor o en contra?</h2>
-  <p>Comparo el <strong>promedio de los últimos 50 días</strong> (SMA50) contra el de los <strong>últimos 200 días</strong> (SMA200). Cuando el de 50 está arriba del de 200, la acción viene subiendo más en el corto plazo que en el largo — tendencia <span class="zone-up">alcista</span>. Cuando está abajo, viene más floja que su propio promedio largo — tendencia <span class="zone-down">bajista</span>. Es la lectura más lenta de las cuatro; cambia pocas veces al año.</p>
+  <h2>1. ¿Viene bien o viene mal, en general?</h2>
+  <p>Miro si en los últimos meses la empresa viene <strong>subiendo más de lo normal</strong> o <strong>subiendo menos de lo normal para ella</strong>, comparando cómo estuvo el último par de meses contra cómo estuvo en todo el último año. Es la pregunta más "de fondo" — no cambia de un día para el otro, así que sirve para saber si estás nadando a favor o en contra de la corriente.</p>
+  <p class="aside">(en la jerga esto es comparar el promedio de 50 días contra el de 200 días — no hace falta que te acuerdes del nombre)</p>
 
-  <h2><span class="num">2</span>¿Qué tan lejos está de su máximo?</h2>
-  <p>El precio de hoy contra el <strong>máximo de las últimas 52 semanas</strong>. Tres bandas:</p>
-  <ul>
-    <li><strong>Cerca de máximos</strong> (menos de -5%): no hay descuento, está cara respecto a su propio historial reciente.</li>
-    <li><strong>Corrección moderada</strong> (-5% a -20%): bajó, pero es un movimiento normal, no necesariamente una señal.</li>
-    <li><strong>Caída profunda</strong> (más de -20%): la zona que suele llamar la atención — pero una caída grande no es automáticamente una oportunidad, puede seguir cayendo.</li>
-  </ul>
-
-  <div class="example">
-    <div class="label">ejemplo real de tu watchlist</div>
-    <div class="ticker">MELI — Mercado Libre</div>
-    <p style="margin-top:0.6rem">Está a <strong>-26.2%</strong> de su máximo de 52 semanas → <strong>caída profunda</strong>. Suena a descuento. Pero hay que mirar el punto 3 antes de sacar conclusiones.</p>
-  </div>
-
-  <h2><span class="num">3</span>¿El momentum está sobrecomprado, sobrevendido o neutral?</h2>
-  <p>El <strong>RSI (14 días)</strong> mide qué tan fuerte vino subiendo o bajando en las últimas dos semanas, en una escala de 0 a 100.</p>
-  <ul>
-    <li>RSI &gt; 70: <span class="zone-down">sobrecomprado</span> — subió fuerte y rápido, puede estar por agotarse en el corto plazo.</li>
-    <li>RSI &lt; 35: <span class="zone-up">sobrevendido</span> — cayó fuerte y rápido, puede estar por rebotar (o seguir cayendo, el RSI no lo garantiza).</li>
-    <li>Entre medio: neutral, sin señal de corto plazo.</li>
-  </ul>
+  <h2>2. ¿Está cara o barata comparada con su propio máximo?</h2>
+  <p>Miro cuánto bajó desde el precio más alto que tocó en el último año. Tres situaciones:</p>
+  <p><strong>Casi en su punto más caro</strong> — no hay ningún descuento, está donde siempre estuvo o más arriba.</p>
+  <p><strong>Bajó un poco</strong> — un vaivén normal, no significa mucho por sí solo.</p>
+  <p><strong>Bajó fuerte</strong> — acá es donde uno presta atención. Pero ojo, "bajó fuerte" no quiere decir "es momento de comprar" — puede seguir bajando. Por eso hace falta el paso 3.</p>
 
   <div class="example">
-    <div class="label">mismo ejemplo, ahora completo</div>
-    <div class="ticker">MELI — Mercado Libre</div>
-    <p style="margin-top:0.6rem"><strong>Caída profunda</strong> (-26.2% del máximo) pero RSI <strong>76.3 — sobrecomprado</strong>. Esto es la trampa clásica: bajó mucho desde su pico, pero en las últimas dos semanas ya <em>rebotó</em> con fuerza. Comprar acá es perseguir el rebote, no agarrar la caída. El punto 2 solo no alcanza — siempre hay que cruzarlo con el 3.</p>
+    <div class="label">un caso real de tu lista</div>
+    <div class="ticker">Mercado Libre</div>
+    <p>Está bastante más barata que su punto más alto del último año. Suena tentador. Pero seguí leyendo…</p>
   </div>
 
-  <h2><span class="num">4</span>¿Acaba de cambiar de dirección el momentum?</h2>
-  <p>El <strong>cruce de MACD</strong> es la señal más "fresca" de las cuatro: detecta cuando el momentum de corto plazo acaba de girar, en los últimos 5 días. Un <span class="zone-up">cruce alcista</span> reciente dice "esto recién empezó a girar para arriba" — distinto de "ya viene subiendo hace rato" (que sería más tarde para entrar) o "todavía no giró" (que sería más temprano).</p>
-  <p>Es la señal que más vale la pena revisar seguido, porque es la que menos dura: aparece y en unos días ya está desactualizada.</p>
+  <h2>3. ¿Viene subiendo muy rápido últimamente, o cayendo muy rápido?</h2>
+  <p>Esto mide qué tan "caliente" estuvo el movimiento en las últimas dos semanas — no si está cara o barata, sino qué tan rápido se movió hace poco.</p>
+  <p>Si <strong>subió muy fuerte y muy rápido</strong> en los últimos días, hay que tener cuidado: ya se movió, y comprar justo ahí es como subirte a un colectivo que ya está arrancando a toda velocidad — capaz sigue, capaz frena de golpe.</p>
+  <p>Si <strong>cayó muy fuerte y muy rápido</strong>, puede estar por rebotar (aunque tampoco es garantía — a veces sigue cayendo).</p>
+  <p>Si no pasó nada raro últimamente, está tranquila.</p>
+  <p class="aside">(esto es lo que técnicamente se llama RSI — un número de 0 a 100 que mide qué tan "acelerado" viene el movimiento reciente)</p>
+
+  <div class="example">
+    <div class="label">completando el ejemplo</div>
+    <div class="ticker">Mercado Libre</div>
+    <p><strong>Bajó fuerte</strong> desde su máximo — pero en las últimas dos semanas <strong>ya venía subiendo muy rápido</strong>. Es decir: cayó mucho hace un tiempo, pero el rebote ya arrancó y ya se puso "caliente". Comprarla justo ahora es subirte al colectivo que ya está en marcha, no agarrarla en el semáforo. Por eso mirar solo el punto 2 (que bajó mucho) te puede engañar — siempre hay que cruzarlo con este punto 3.</p>
+  </div>
+
+  <h2>4. ¿Recién cambió de dirección esta semana?</h2>
+  <p>Esta es la señal más "fresca" de las cuatro — avisa cuando el impulso de la acción <strong>acaba de girar</strong> en los últimos días, ni antes ni "ya hace rato". Es la diferencia entre enterarte de algo cuando recién está pasando, contra enterarte cuando ya pasó hace semanas y todo el mundo lo sabe.</p>
+  <p>Es la que más vale la pena revisar seguido, porque dura poco — en unos días ya quedó vieja.</p>
 
   <div class="callout">
-    <strong>Cómo uso esto en la práctica:</strong> ordeno el watchlist priorizando cruces de MACD recientes primero, después caídas profundas. Ignoro lo que está "cerca de máximos" — ahí no hay descuento que buscar. Y desconfío de lo que está en caída profunda <em>pero también</em> sobrecomprado, como el ejemplo de MELI: ya se movió, llegar tarde ahí es perseguir precio.
+    <strong>Cómo lo uso yo en la práctica:</strong> primero miro si alguna empresa acaba de "girar" esta semana (punto 4) — eso es lo más urgente. Después miro las que bajaron fuerte (punto 2). Ignoro directamente las que están cerca de su máximo, ahí no hay nada que buscar. Y si algo bajó fuerte pero además ya viene "caliente" de nuevo (como Mercado Libre en el ejemplo), lo tomo con pinzas: quizás ya me perdí el mejor momento para esa vez.
   </div>
 
-  <h2><span class="num">·</span>de dónde sale el watchlist</h2>
-  <p>Las empresas de esta lista no las elijo yo con un algoritmo — vienen de la serie <em>"Armando mi Jubilación"</em> del canal de YouTube <strong>Joven Inversor</strong>. Cuando sale un video nuevo, se lee la transcripción y se identifica qué empresa decidió sumar ese mes; si es nueva, se agrega acá. El watchlist es la intersección entre "lo que ese canal está mirando" y "lectura técnica automática" — ninguna de las dos partes sola alcanza.</p>
+  <h2>¿De dónde salen las empresas de la lista?</h2>
+  <p>No las elijo con ningún algoritmo. Vienen de la serie <em>"Armando mi Jubilación"</em>, del canal de YouTube <strong>Joven Inversor</strong>. Cuando sale un video nuevo, reviso qué empresa decidió sumar a su cartera ese mes, y si es nueva, la agrego acá. La idea es cruzar "lo que ese canal está mirando" con "cómo viene el precio ahora" — ni una cosa ni la otra alcanza sola.</p>
 </article>
 
 <footer>
-  Esto es lectura técnica automática, no recomendación de inversión. Las decisiones de compra son tuyas.
+  Esto es una lectura automática de precios, no un consejo financiero. La decisión de comprar o no es siempre tuya.
 </footer>
 
 </body>

@@ -266,7 +266,7 @@ footer{
 </div>
 
 <main>
-  <p class="lede">Lectura técnica de las empresas que vengo siguiendo — no son recomendaciones, es el estado de cada una hoy: <strong>qué tan lejos está de sus máximos</strong>, si el momentum viene sobrecomprado o recién girando, y si el MACD marcó algo nuevo esta semana.</p>
+  <p class="lede">Cómo viene cada empresa que sigo, en criollo — no son recomendaciones de compra, es solo el estado de cada una hoy: <strong>qué tan lejos está de su punto más caro</strong>, si viene "caliente" (subiendo o cayendo muy rápido últimamente), y si recién cambió de dirección esta semana. <a href="guia.html" style="color:inherit">¿Cómo leo esto? →</a></p>
 
   <div id="app">
     <div class="loading">trayendo los datos…</div>
@@ -287,25 +287,35 @@ function fmtPct(n){
   return `${sign}${n.toFixed(1)}%`;
 }
 
+const TREND_PHRASE = {
+  alcista: 'Viene mejor que su propio promedio de los últimos meses',
+  bajista: 'Viene peor que su propio promedio de los últimos meses',
+};
+
+const DRAWDOWN_PHRASE = {
+  cerca_maximos: 'está casi en su punto más caro del último año',
+  correccion_moderada: 'bajó un poco desde su máximo del último año',
+  caida_profunda: 'bajó fuerte desde su máximo del último año',
+};
+
 function narrativeFor(t){
   const bits = [];
-  bits.push(`Tendencia de fondo <span class="flag">${t.Tendencia === 'alcista' ? 'alcista' : 'bajista'}</span>`);
-  bits.push(`${DRAWDOWN_WORD[t['Banda 52w']]} desde el máximo de 52 semanas (${fmtPct(t['% vs max 52w'])})`);
-  if (t['Zona RSI'] === 'sobrecomprado') bits.push(`<span class="flag hot">RSI sobrecomprado</span> (${t.RSI14})`);
-  else if (t['Zona RSI'] === 'sobrevendido') bits.push(`<span class="flag hot">RSI sobrevendido</span> (${t.RSI14})`);
-  else bits.push(`RSI neutral (${t.RSI14})`);
-  return bits.join(' — ') + '.';
+  bits.push(`${TREND_PHRASE[t.Tendencia]}, y ${DRAWDOWN_PHRASE[t['Banda 52w']]} (${fmtPct(t['% vs max 52w'])})`);
+  if (t['Zona RSI'] === 'sobrecomprado') bits.push(`<span class="flag hot">venía subiendo muy rápido</span> en las últimas dos semanas — cuidado con perseguirla`);
+  else if (t['Zona RSI'] === 'sobrevendido') bits.push(`<span class="flag hot">venía cayendo muy rápido</span> en las últimas dos semanas`);
+  else bits.push(`sin nada raro en el movimiento de las últimas dos semanas`);
+  return bits.join('. ') + '.';
 }
 
 function tagsFor(t){
   const tags = [];
   if (t['MACD cross']) {
     const up = t['MACD cross'].includes('alcista');
-    tags.push(`<span class="tag ${up ? 'cross-up' : 'cross-down'}">${up ? '↑' : '↓'} cruce MACD ${up ? 'alcista' : 'bajista'}</span>`);
+    tags.push(`<span class="tag ${up ? 'cross-up' : 'cross-down'}">${up ? '↑' : '↓'} recién giró para ${up ? 'arriba' : 'abajo'}</span>`);
   }
-  if (t['Zona RSI'] === 'sobrecomprado') tags.push(`<span class="tag overbought">RSI &gt; 70</span>`);
-  if (t['Zona RSI'] === 'sobrevendido') tags.push(`<span class="tag oversold">RSI &lt; 35</span>`);
-  tags.push(`<span class="tag">ATR ${t['Volatilidad (ATR%)']}%</span>`);
+  if (t['Zona RSI'] === 'sobrecomprado') tags.push(`<span class="tag overbought">subiendo fuerte</span>`);
+  if (t['Zona RSI'] === 'sobrevendido') tags.push(`<span class="tag oversold">cayendo fuerte</span>`);
+  tags.push(`<span class="tag">vaivén diario: ${t['Volatilidad (ATR%)']}%</span>`);
   return tags.join('');
 }
 
