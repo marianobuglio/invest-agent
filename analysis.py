@@ -1,21 +1,9 @@
+import json
 import yfinance as yf
 import pandas as pd
 
-TICKERS = {
-    "MELI": "Mercado Libre",
-    "MSFT": "Microsoft",
-    "AMD": "AMD",
-    "BABA": "Alibaba",
-    "AAPL": "Apple",
-    "META": "Meta",
-    "NVDA": "Nvidia",
-    "AMZN": "Amazon",
-    "GOOGL": "Alphabet",
-    "TSLA": "Tesla",
-    "GGAL": "Grupo Galicia",
-    "SPY": "S&P 500 (ETF)",
-    "QQQ": "Nasdaq 100 (ETF)",
-}
+with open("watchlist.json") as f:
+    TICKERS = json.load(f)
 
 
 def rsi(series, period=14):
