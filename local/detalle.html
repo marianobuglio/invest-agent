@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>detalle — la cartera</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📓</text></svg>" />
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+
+@font-face { font-family: 'Fraunces'; src: local('Fraunces'); }
+
+:root{
+  --bg: oklch(16% 0.014 260);
+  --bg-raised: oklch(20% 0.016 260);
+  --ink: oklch(92% 0.01 260);
+  --ink-dim: oklch(68% 0.014 260);
+  --ink-faint: oklch(48% 0.014 260);
+  --line: oklch(30% 0.018 260);
+  --accent: oklch(72% 0.14 55);
+  --up: oklch(70% 0.13 155);
+  --down: oklch(68% 0.16 25);
+  --serif: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+*{ box-sizing: border-box; }
+html{ color-scheme: dark; }
+
+body{
+  margin: 0;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, oklch(24% 0.03 55 / 0.35), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1.25rem, 6vw, 5rem) 5rem;
+}
+
+.masthead{
+  max-width: 60rem;
+  margin: 0 auto 2rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.25rem;
+}
+.back{
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+.back:hover{ color: var(--accent); }
+
+.head-row{ display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
+.head-row h1{
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.head-row .company{ color: var(--ink-faint); font-size: 0.95rem; margin-top: 0.2rem; }
+.head-row .price{ font-family: var(--serif); font-size: 1.8rem; text-align: right; }
+.head-row .price .pct{ font-size: 0.85rem; color: var(--ink-faint); display: block; }
+
+.badge{
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  margin-top: 0.6rem;
+}
+.badge.entrada{ border-color: color-mix(in oklch, var(--up) 50%, var(--line)); color: var(--up); }
+.badge.corrio{ border-color: color-mix(in oklch, var(--down) 40%, var(--line)); color: color-mix(in oklch, var(--down) 70%, var(--ink-dim)); }
+
+main{ max-width: 60rem; margin: 0 auto; }
+
+.panel{
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.panel-label{
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.legend{ display: flex; gap: 1rem; font-size: 0.72rem; color: var(--ink-faint); }
+.legend span{ display: inline-flex; align-items: center; gap: 0.3rem; }
+.legend .dot{ width: 0.6rem; height: 0.15rem; display: inline-block; }
+
+#chart{ width: 100%; height: 380px; }
+#rsi-chart{ width: 100%; height: 120px; }
+
+.narrative-box{
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+  max-width: 40rem;
+  margin: 0 0 2rem;
+}
+
+.notes-list{ display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1rem; }
+.note{
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+.note:last-child{ border-bottom: none; }
+.note .date{ color: var(--ink-faint); font-size: 0.72rem; white-space: nowrap; margin-top: 0.15rem; }
+.note .text{ flex: 1; color: var(--ink-dim); }
+.note button{
+  background: none; border: none; color: var(--ink-faint); cursor: pointer; font-size: 0.9rem;
+}
+.note button:hover{ color: var(--down); }
+
+.note-form{ display: flex; gap: 0.6rem; }
+.note-form textarea{
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  padding: 0.6rem 0.75rem;
+  resize: vertical;
+  min-height: 2.5rem;
+}
+.note-form textarea:focus{ outline: none; border-color: var(--accent); }
+.note-form button{
+  background: var(--accent);
+  color: oklch(16% 0.014 260);
+  border: none;
+  border-radius: 5px;
+  padding: 0 1.1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.empty-notes{ color: var(--ink-faint); font-style: italic; font-size: 0.88rem; }
+
+.loading{ color: var(--ink-faint); font-style: italic; font-family: var(--serif); padding: 3rem 0; }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <a class="back" href="index.html">← volver a la cartera</a>
+  <div class="head-row" id="head-row">
+    <div><div class="loading">cargando…</div></div>
+  </div>
+</div>
+
+<main>
+  <p class="narrative-box" id="narrative-box"></p>
+
+  <div class="panel">
+    <div class="panel-label">
+      <span>precio, últimos 2 años</span>
+      <div class="legend">
+        <span><span class="dot" style="background:#5b8def"></span> promedio 50 días</span>
+        <span><span class="dot" style="background:#e0a458"></span> promedio 200 días</span>
+      </div>
+    </div>
+    <div id="chart"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label"><span>qué tan "caliente" viene (RSI, corto plazo — de yapa, no lo esencial)</span></div>
+    <div id="rsi-chart"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label"><span>tus notas</span></div>
+    <div class="notes-list" id="notes-list"></div>
+    <form class="note-form" id="note-form">
+      <textarea id="note-text" placeholder="ej: acá se nota un piso, rebotó tres veces en esta zona..."></textarea>
+      <button type="submit">anotar</button>
+    </form>
+  </div>
+</main>
+
+<script>
+const params = new URLSearchParams(location.search);
+const ticker = (params.get('ticker') || '').toUpperCase();
+if (!ticker) document.body.innerHTML = '<p style="padding:2rem;color:#999">Falta el ticker en la URL.</p>';
+
+const DRAWDOWN_PHRASE = {
+  cerca_maximos: 'está casi en su punto más caro del último año',
+  correccion_moderada: 'bajó un poco desde su máximo del último año',
+  caida_profunda: 'bajó fuerte desde su máximo del último año',
+};
+const TREND_PHRASE = {
+  alcista: 'Viene mejor que su propio promedio de los últimos meses',
+  bajista: 'Viene peor que su propio promedio de los últimos meses',
+};
+
+function fmtPct(n){ return `${n > 0 ? '+' : ''}${n.toFixed(1)}%`; }
+
+function renderHead(t){
+  document.title = `${t.Ticker} — la cartera`;
+  let badge = '';
+  if (t.Aviso === 'revisar_entrada') badge = `<div class="badge entrada">◆ vale la pena mirarla este mes</div>`;
+  if (t.Aviso === 'ya_corrio_mucho') badge = `<div class="badge corrio">◆ ya subió bastante, sin descuento</div>`;
+
+  document.getElementById('head-row').innerHTML = `
+    <div>
+      <h1>${t.Ticker}</h1>
+      <div class="company">${t.Empresa}</div>
+      ${badge}
+    </div>
+    <div class="price">
+      $${t.Precio.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+      <span class="pct">${fmtPct(t['% vs max 52w'])} vs. máximo de 52 semanas</span>
+    </div>
+  `;
+
+  document.getElementById('narrative-box').textContent =
+    `${TREND_PHRASE[t.Tendencia]}, y ${DRAWDOWN_PHRASE[t['Banda 52w']]}. En los últimos 6 meses ${t['Cambio 6m'] >= 0 ? 'subió' : 'bajó'} ${Math.abs(t['Cambio 6m']).toFixed(1)}%.`;
+}
+
+function renderChart(data){
+  const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+    layout: { background: { color: 'transparent' }, textColor: '#a8a8b3' },
+    grid: { vertLines: { color: 'rgba(255,255,255,0.04)' }, horzLines: { color: 'rgba(255,255,255,0.04)' } },
+    rightPriceScale: { borderColor: 'rgba(255,255,255,0.1)' },
+    timeScale: { borderColor: 'rgba(255,255,255,0.1)' },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+  });
+
+  const candleSeries = chart.addCandlestickSeries({
+    upColor: '#5fae72', downColor: '#c9605a',
+    borderVisible: false,
+    wickUpColor: '#5fae72', wickDownColor: '#c9605a',
+  });
+  candleSeries.setData(data.candles);
+
+  const sma50 = chart.addLineSeries({ color: '#5b8def', lineWidth: 1.5 });
+  sma50.setData(data.sma50);
+
+  const sma200 = chart.addLineSeries({ color: '#e0a458', lineWidth: 1.5 });
+  sma200.setData(data.sma200);
+
+  chart.timeScale().fitContent();
+
+  const rsiChart = LightweightCharts.createChart(document.getElementById('rsi-chart'), {
+    layout: { background: { color: 'transparent' }, textColor: '#a8a8b3' },
+    grid: { vertLines: { color: 'rgba(255,255,255,0.04)' }, horzLines: { color: 'rgba(255,255,255,0.04)' } },
+    rightPriceScale: { borderColor: 'rgba(255,255,255,0.1)' },
+    timeScale: { borderColor: 'rgba(255,255,255,0.1)', visible: false },
+  });
+  const rsiSeries = rsiChart.addLineSeries({ color: '#b98ee0', lineWidth: 1.5 });
+  rsiSeries.setData(data.rsi14);
+  rsiChart.timeScale().fitContent();
+
+  window.addEventListener('resize', () => {
+    chart.applyOptions({ width: document.getElementById('chart').clientWidth });
+    rsiChart.applyOptions({ width: document.getElementById('rsi-chart').clientWidth });
+  });
+}
+
+function loadNotes(){
+  fetch(`/api/notes/${ticker}`)
+    .then(r => r.json())
+    .then(notes => {
+      const list = document.getElementById('notes-list');
+      if (!notes.length) {
+        list.innerHTML = `<div class="empty-notes">Todavía no anotaste nada acá.</div>`;
+        return;
+      }
+      list.innerHTML = notes.map((n, i) => `
+        <div class="note">
+          <div class="date">${n.date}</div>
+          <div class="text">${n.text}</div>
+          <button onclick="deleteNote(${i})" title="borrar">×</button>
+        </div>
+      `).join('');
+    });
+}
+
+window.deleteNote = function(index){
+  fetch(`/api/notes/${ticker}/${index}`, { method: 'DELETE' }).then(loadNotes);
+};
+
+document.getElementById('note-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const textarea = document.getElementById('note-text');
+  const text = textarea.value.trim();
+  if (!text) return;
+  fetch(`/api/notes/${ticker}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  }).then(() => { textarea.value = ''; loadNotes(); });
+});
+
+if (ticker) {
+  fetch(`/api/summary/${ticker}`).then(r => r.json()).then(renderHead);
+  fetch(`/api/chart/${ticker}`).then(r => r.json()).then(renderChart);
+  loadNotes();
+}
+</script>
+
+</body>
+</html>
