@@ -155,6 +155,65 @@ main{ max-width: 60rem; margin: 0 auto; }
 
 .empty-notes{ color: var(--ink-faint); font-style: italic; font-size: 0.88rem; }
 
+.position-summary{
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.position-summary .stat-block{ font-size: 0.78rem; color: var(--ink-faint); }
+.position-summary .stat-block strong{
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--ink);
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+.position-summary .stat-block strong.pos{ color: var(--up); }
+.position-summary .stat-block strong.neg{ color: var(--down); }
+
+.buys-list{ margin-bottom: 1rem; }
+.buy-row{
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+}
+.buy-row:last-child{ border-bottom: none; }
+.buy-row button{ background: none; border: none; color: var(--ink-faint); cursor: pointer; }
+.buy-row button:hover{ color: var(--down); }
+
+.buy-form{ display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: flex-end; }
+.buy-form label{ font-size: 0.72rem; color: var(--ink-faint); display: block; margin-bottom: 0.3rem; }
+.buy-form input{
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  padding: 0.45rem 0.6rem;
+  width: 8rem;
+}
+.buy-form input:focus{ outline: none; border-color: var(--accent); }
+.buy-form button{
+  background: var(--accent);
+  color: oklch(16% 0.014 260);
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: var(--sans);
+  height: 2.35rem;
+}
+.buy-form .error{ color: var(--down); font-size: 0.78rem; width: 100%; }
+
 .loading{ color: var(--ink-faint); font-style: italic; font-family: var(--serif); padding: 3rem 0; }
 </style>
 </head>
@@ -184,6 +243,28 @@ main{ max-width: 60rem; margin: 0 auto; }
   <div class="panel">
     <div class="panel-label"><span>qué tan "caliente" viene (RSI, corto plazo — de yapa, no lo esencial)</span></div>
     <div id="rsi-chart"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label"><span>tu posición</span></div>
+    <div id="position-summary"></div>
+    <div class="buys-list" id="buys-list"></div>
+    <form class="buy-form" id="buy-form">
+      <div>
+        <label>fecha</label>
+        <input type="date" id="b-date" />
+      </div>
+      <div>
+        <label>precio pagado</label>
+        <input type="number" id="b-price" step="0.01" min="0" placeholder="0.00" required />
+      </div>
+      <div>
+        <label>cantidad</label>
+        <input type="number" id="b-shares" step="any" min="0" placeholder="0" required />
+      </div>
+      <button type="submit">registrar compra</button>
+      <div class="error" id="buy-error"></div>
+    </form>
   </div>
 
   <div class="panel">
@@ -310,10 +391,76 @@ document.getElementById('note-form').addEventListener('submit', (e) => {
   }).then(() => { textarea.value = ''; loadNotes(); });
 });
 
+function fmtMoney(n){
+  return `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function loadPosition(){
+  fetch(`/api/positions/${ticker}`)
+    .then(r => r.json())
+    .then(({ buys, summary }) => {
+      const summaryEl = document.getElementById('position-summary');
+      const listEl = document.getElementById('buys-list');
+
+      if (!summary) {
+        summaryEl.innerHTML = `<p style="color:var(--ink-faint);font-size:0.9rem;margin:0 0 1rem">Todavía no registraste ninguna compra de ${ticker}.</p>`;
+        listEl.innerHTML = '';
+        return;
+      }
+
+      const cls = summary.gain_pct >= 0 ? 'pos' : 'neg';
+      const sign = summary.gain_pct >= 0 ? '+' : '';
+      summaryEl.innerHTML = `
+        <div class="position-summary">
+          <div class="stat-block">tenés<strong>${summary.shares} u.</strong></div>
+          <div class="stat-block">precio promedio<strong>${fmtMoney(summary.avg_cost)}</strong></div>
+          <div class="stat-block">invertiste<strong>${fmtMoney(summary.invested)}</strong></div>
+          <div class="stat-block">valor hoy<strong>${fmtMoney(summary.current_value)}</strong></div>
+          <div class="stat-block">resultado<strong class="${cls}">${sign}${summary.gain_pct.toFixed(1)}%</strong></div>
+        </div>
+      `;
+
+      listEl.innerHTML = buys.map((b, i) => `
+        <div class="buy-row">
+          <span>${b.date} — ${b.shares} u. a ${fmtMoney(b.price)}</span>
+          <button onclick="deleteBuy(${i})" title="borrar">×</button>
+        </div>
+      `).join('');
+    });
+}
+
+window.deleteBuy = function(index){
+  fetch(`/api/positions/${ticker}/${index}`, { method: 'DELETE' }).then(loadPosition);
+};
+
+document.getElementById('buy-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const price = document.getElementById('b-price').value;
+  const shares = document.getElementById('b-shares').value;
+  const date = document.getElementById('b-date').value;
+  const errorEl = document.getElementById('buy-error');
+  errorEl.textContent = '';
+
+  fetch(`/api/positions/${ticker}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ price, shares, date }),
+  })
+    .then(r => r.json().then(body => ({ ok: r.ok, body })))
+    .then(({ ok, body }) => {
+      if (!ok) { errorEl.textContent = body.error; return; }
+      document.getElementById('b-price').value = '';
+      document.getElementById('b-shares').value = '';
+      document.getElementById('b-date').value = '';
+      loadPosition();
+    });
+});
+
 if (ticker) {
   fetch(`/api/summary/${ticker}`).then(r => r.json()).then(renderHead);
   fetch(`/api/chart/${ticker}`).then(r => r.json()).then(renderChart);
   loadNotes();
+  loadPosition();
 }
 </script>
 

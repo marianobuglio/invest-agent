@@ -11,6 +11,7 @@ app = Flask(__name__, static_folder=None)
 
 WATCHLIST_PATH = "watchlist.json"
 NOTES_PATH = "notes.json"
+POSITIONS_PATH = "positions.json"
 
 
 def load_watchlist():
@@ -23,16 +24,58 @@ def save_watchlist(wl):
         json.dump(wl, f, ensure_ascii=False, indent=2)
 
 
-def load_notes():
-    if not os.path.exists(NOTES_PATH):
+def load_json_store(path):
+    if not os.path.exists(path):
         return {}
-    with open(NOTES_PATH) as f:
+    with open(path) as f:
         return json.load(f)
 
 
+def save_json_store(path, data):
+    with open(path, "w") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def load_notes():
+    return load_json_store(NOTES_PATH)
+
+
 def save_notes(notes):
-    with open(NOTES_PATH, "w") as f:
-        json.dump(notes, f, ensure_ascii=False, indent=2)
+    save_json_store(NOTES_PATH, notes)
+
+
+def load_positions():
+    return load_json_store(POSITIONS_PATH)
+
+
+def save_positions(positions):
+    save_json_store(POSITIONS_PATH, positions)
+
+
+def position_summary(ticker, buys):
+    if not buys:
+        return None
+    hist = fetch_history(ticker, period="5d")
+    if hist.empty:
+        return None
+    current_price = float(hist["Close"].iloc[-1])
+
+    total_shares = sum(b["shares"] for b in buys)
+    total_cost = sum(b["shares"] * b["price"] for b in buys)
+    avg_cost = total_cost / total_shares
+    current_value = total_shares * current_price
+    gain_abs = current_value - total_cost
+    gain_pct = (current_value / total_cost - 1) * 100
+
+    return {
+        "shares": round(total_shares, 6),
+        "avg_cost": round(avg_cost, 2),
+        "current_price": round(current_price, 2),
+        "invested": round(total_cost, 2),
+        "current_value": round(current_value, 2),
+        "gain_abs": round(gain_abs, 2),
+        "gain_pct": round(gain_pct, 1),
+    }
 
 
 def clean(row):
@@ -170,6 +213,65 @@ def delete_note(ticker, index):
         items.pop(index)
         save_notes(notes)
     return jsonify(items)
+
+
+@app.route("/api/positions")
+def api_positions():
+    positions = load_positions()
+    wl = load_watchlist()
+    out = {}
+    for ticker, buys in positions.items():
+        summary = position_summary(ticker, buys)
+        if summary:
+            out[ticker] = {
+                "empresa": wl.get(ticker, ticker),
+                "buys": buys,
+                "summary": summary,
+            }
+    return jsonify(out)
+
+
+@app.route("/api/positions/<ticker>", methods=["GET"])
+def get_position(ticker):
+    ticker = ticker.upper()
+    positions = load_positions()
+    buys = positions.get(ticker, [])
+    return jsonify({"buys": buys, "summary": position_summary(ticker, buys)})
+
+
+@app.route("/api/positions/<ticker>", methods=["POST"])
+def add_buy(ticker):
+    ticker = ticker.upper()
+    body = request.get_json()
+    try:
+        price = float(body["price"])
+        shares = float(body["shares"])
+    except (KeyError, TypeError, ValueError):
+        return jsonify({"error": "precio y cantidad tienen que ser números"}), 400
+    if price <= 0 or shares <= 0:
+        return jsonify({"error": "precio y cantidad tienen que ser mayores a cero"}), 400
+    date = body.get("date") or datetime.now().strftime("%Y-%m-%d")
+
+    positions = load_positions()
+    positions.setdefault(ticker, [])
+    positions[ticker].append({"date": date, "price": price, "shares": shares})
+    save_positions(positions)
+    return jsonify({"buys": positions[ticker], "summary": position_summary(ticker, positions[ticker])})
+
+
+@app.route("/api/positions/<ticker>/<int:index>", methods=["DELETE"])
+def delete_buy(ticker, index):
+    ticker = ticker.upper()
+    positions = load_positions()
+    buys = positions.get(ticker, [])
+    if 0 <= index < len(buys):
+        buys.pop(index)
+        if buys:
+            positions[ticker] = buys
+        else:
+            del positions[ticker]
+        save_positions(positions)
+    return jsonify({"buys": positions.get(ticker, []), "summary": position_summary(ticker, positions.get(ticker, []))})
 
 
 if __name__ == "__main__":
