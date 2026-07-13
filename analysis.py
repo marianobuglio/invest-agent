@@ -76,14 +76,23 @@ RSI_LABEL = {
 }
 
 
+def aviso(row):
+    """Pensado para revisión mensual, horizonte ~1 año, watchlist de candidatas (no posiciones abiertas)."""
+    # ya subió mucho en los últimos meses y está cerca de máximos: no hay descuento, evitar perseguirla
+    if row["Banda 52w"] == "cerca_maximos" and row["Cambio 6m"] > 40:
+        return "ya_corrio_mucho"
+    # cayó fuerte desde el máximo y no viene de un rebote ya muy corrido: candidata real a mirar para entrar
+    if row["Banda 52w"] == "caida_profunda" and row["Cambio 3m"] < 15:
+        return "revisar_entrada"
+    return None
+
+
 def momento(row):
     parts = [
         f"tendencia de fondo {row['Tendencia']}",
         DRAWDOWN_LABEL[row["Banda 52w"]],
-        RSI_LABEL[row["Zona RSI"]],
+        f"{'subió' if row['Cambio 6m'] >= 0 else 'bajó'} {abs(row['Cambio 6m'])}% en los últimos 6 meses",
     ]
-    if row["MACD cross"]:
-        parts.append(row["MACD cross"])
     return ", ".join(parts)
 
 
@@ -110,6 +119,9 @@ for ticker, name in TICKERS.items():
     atr14 = atr(hist).iloc[-1]
     atr_pct = atr14 / price * 100
 
+    price_3m = close.iloc[-63] if len(close) > 63 else close.iloc[0]
+    price_6m = close.iloc[-126] if len(close) > 126 else close.iloc[0]
+
     row = {
         "Ticker": ticker,
         "Empresa": name,
@@ -118,6 +130,8 @@ for ticker, name in TICKERS.items():
         "% vs max 52w": round((price / max_52w - 1) * 100, 1),
         "% vs min 52w": round((price / min_52w - 1) * 100, 1),
         "% vs EMA20": round((price / ema20 - 1) * 100, 1),
+        "Cambio 3m": round((price / price_3m - 1) * 100, 1),
+        "Cambio 6m": round((price / price_6m - 1) * 100, 1),
         "SMA50": sma50,
         "SMA200": sma200,
         "RSI14": round(rsi14, 1),
@@ -127,6 +141,7 @@ for ticker, name in TICKERS.items():
     row["Tendencia"] = trend_zone(row)
     row["Banda 52w"] = drawdown_band(row)
     row["Zona RSI"] = rsi_zone(row)
+    row["Aviso"] = aviso(row)
     row["Momento"] = momento(row)
     rows.append(row)
 

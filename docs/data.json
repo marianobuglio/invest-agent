@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-10T21:15:39.939045+00:00",
+  "generated_at": "2026-07-13T00:03:02.908701+00:00",
   "tickers": [
     {
       "Ticker": "MELI",
@@ -9,6 +9,8 @@
       "% vs max 52w": -26.2,
       "% vs min 52w": 19.7,
       "% vs EMA20": 7.2,
+      "Cambio 3m": 4.4,
+      "Cambio 6m": -15.0,
       "SMA50": 1683.2270068359376,
       "SMA200": 1926.9009527587891,
       "RSI14": 76.3,
@@ -17,7 +19,8 @@
       "Tendencia": "bajista",
       "Banda 52w": "caida_profunda",
       "Zona RSI": "sobrecomprado",
-      "Momento": "tendencia de fondo bajista, caída profunda desde máximos, sobrecomprado"
+      "Aviso": "revisar_entrada",
+      "Momento": "tendencia de fondo bajista, caída profunda desde máximos, bajó 15.0% en los últimos 6 meses"
     },
     {
       "Ticker": "MSFT",
@@ -27,15 +30,18 @@
       "% vs max 52w": -28.5,
       "% vs min 52w": 9.1,
       "% vs EMA20": -0.3,
+      "Cambio 3m": 4.1,
+      "Cambio 6m": -19.1,
       "SMA50": 403.3287658691406,
-      "SMA200": 440.707646484375,
+      "SMA200": 440.70764755249024,
       "RSI14": 52.9,
       "MACD cross": null,
       "Volatilidad (ATR%)": 3.3,
       "Tendencia": "bajista",
       "Banda 52w": "caida_profunda",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo bajista, caída profunda desde máximos, momentum neutral"
+      "Aviso": "revisar_entrada",
+      "Momento": "tendencia de fondo bajista, caída profunda desde máximos, bajó 19.1% en los últimos 6 meses"
     },
     {
       "Ticker": "AMD",
@@ -45,6 +51,8 @@
       "% vs max 52w": -4.0,
       "% vs min 52w": 287.0,
       "% vs EMA20": 6.0,
+      "Cambio 3m": 127.7,
+      "Cambio 6m": 172.6,
       "SMA50": 481.8955993652344,
       "SMA200": 287.6637496185303,
       "RSI14": 53.4,
@@ -53,7 +61,8 @@
       "Tendencia": "alcista",
       "Banda 52w": "cerca_maximos",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, momentum neutral"
+      "Aviso": "ya_corrio_mucho",
+      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, subió 172.6% en los últimos 6 meses"
     },
     {
       "Ticker": "BABA",
@@ -63,6 +72,8 @@
       "% vs max 52w": -40.1,
       "% vs min 52w": 18.5,
       "% vs EMA20": 5.7,
+      "Cambio 3m": -11.0,
+      "Cambio 6m": -26.6,
       "SMA50": 119.41284103393555,
       "SMA200": 144.40546718597412,
       "RSI14": 57.8,
@@ -71,7 +82,8 @@
       "Tendencia": "bajista",
       "Banda 52w": "caida_profunda",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo bajista, caída profunda desde máximos, momentum neutral, cruce alcista reciente"
+      "Aviso": "revisar_entrada",
+      "Momento": "tendencia de fondo bajista, caída profunda desde máximos, bajó 26.6% en los últimos 6 meses"
     },
     {
       "Ticker": "AAPL",
@@ -81,6 +93,8 @@
       "% vs max 52w": -0.3,
       "% vs min 52w": 56.4,
       "% vs EMA20": 4.4,
+      "Cambio 3m": 21.2,
+      "Cambio 6m": 22.0,
       "SMA50": 297.7269622802734,
       "SMA200": 272.0966343688965,
       "RSI14": 61.9,
@@ -89,7 +103,8 @@
       "Tendencia": "alcista",
       "Banda 52w": "cerca_maximos",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, subió 22.0% en los últimos 6 meses"
     },
     {
       "Ticker": "META",
@@ -99,33 +114,39 @@
       "% vs max 52w": -15.0,
       "% vs min 52w": 27.4,
       "% vs EMA20": 11.9,
+      "Cambio 3m": 6.3,
+      "Cambio 6m": 3.8,
       "SMA50": 600.0849096679688,
-      "SMA200": 641.6731118774414,
+      "SMA200": 641.673112487793,
       "RSI14": 68.7,
       "MACD cross": null,
       "Volatilidad (ATR%)": 4.0,
       "Tendencia": "bajista",
       "Banda 52w": "correccion_moderada",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo bajista, corrección moderada desde máximos, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo bajista, corrección moderada desde máximos, subió 3.8% en los últimos 6 meses"
     },
     {
       "Ticker": "NVDA",
       "Empresa": "Nvidia",
       "Precio": 210.96,
-      "% vs max 2a": -10.5,
-      "% vs max 52w": -10.5,
-      "% vs min 52w": 28.6,
+      "% vs max 2a": -10.4,
+      "% vs max 52w": -10.4,
+      "% vs min 52w": 28.8,
       "% vs EMA20": 4.0,
-      "SMA50": 209.1990005493164,
-      "SMA200": 191.66197372436523,
+      "Cambio 3m": 12.0,
+      "Cambio 6m": 14.1,
+      "SMA50": 209.0737417602539,
+      "SMA200": 191.46842239379882,
       "RSI14": 50.3,
       "MACD cross": "cruce alcista reciente",
       "Volatilidad (ATR%)": 3.2,
       "Tendencia": "alcista",
       "Banda 52w": "correccion_moderada",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, momentum neutral, cruce alcista reciente"
+      "Aviso": null,
+      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, subió 14.1% en los últimos 6 meses"
     },
     {
       "Ticker": "AMZN",
@@ -135,6 +156,8 @@
       "% vs max 52w": -10.8,
       "% vs min 52w": 23.4,
       "% vs EMA20": 0.8,
+      "Cambio 3m": 2.9,
+      "Cambio 6m": -0.4,
       "SMA50": 254.03459991455077,
       "SMA200": 233.33320007324218,
       "RSI14": 50.9,
@@ -143,7 +166,8 @@
       "Tendencia": "alcista",
       "Banda 52w": "correccion_moderada",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, bajó 0.4% en los últimos 6 meses"
     },
     {
       "Ticker": "GOOGL",
@@ -153,6 +177,8 @@
       "% vs max 52w": -11.2,
       "% vs min 52w": 101.7,
       "% vs EMA20": -0.8,
+      "Cambio 3m": 12.7,
+      "Cambio 6m": 9.9,
       "SMA50": 372.6216882324219,
       "SMA200": 318.5789512634277,
       "RSI14": 42.5,
@@ -161,7 +187,8 @@
       "Tendencia": "alcista",
       "Banda 52w": "correccion_moderada",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, subió 9.9% en los últimos 6 meses"
     },
     {
       "Ticker": "TSLA",
@@ -171,6 +198,8 @@
       "% vs max 52w": -16.8,
       "% vs min 52w": 34.7,
       "% vs EMA20": 1.0,
+      "Cambio 3m": 16.9,
+      "Cambio 6m": -6.4,
       "SMA50": 409.19639892578124,
       "SMA200": 418.1399000549316,
       "RSI14": 52.0,
@@ -179,7 +208,8 @@
       "Tendencia": "bajista",
       "Banda 52w": "correccion_moderada",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo bajista, corrección moderada desde máximos, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo bajista, corrección moderada desde máximos, bajó 6.4% en los últimos 6 meses"
     },
     {
       "Ticker": "GGAL",
@@ -189,15 +219,18 @@
       "% vs max 52w": -8.5,
       "% vs min 52w": 111.7,
       "% vs EMA20": 5.6,
+      "Cambio 3m": 13.8,
+      "Cambio 6m": -1.8,
       "SMA50": 47.63744285583496,
-      "SMA200": 46.04771954536438,
+      "SMA200": 46.04771934509277,
       "RSI14": 44.2,
       "MACD cross": null,
       "Volatilidad (ATR%)": 4.6,
       "Tendencia": "alcista",
       "Banda 52w": "correccion_moderada",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo alcista, corrección moderada desde máximos, bajó 1.8% en los últimos 6 meses"
     },
     {
       "Ticker": "SPY",
@@ -207,15 +240,18 @@
       "% vs max 52w": -0.4,
       "% vs min 52w": 22.8,
       "% vs EMA20": 1.4,
+      "Cambio 3m": 11.4,
+      "Cambio 6m": 10.1,
       "SMA50": 739.9057641601562,
-      "SMA200": 691.0943310546875,
+      "SMA200": 691.0943304443359,
       "RSI14": 56.7,
       "MACD cross": null,
       "Volatilidad (ATR%)": 1.2,
       "Tendencia": "alcista",
       "Banda 52w": "cerca_maximos",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, subió 10.1% en los últimos 6 meses"
     },
     {
       "Ticker": "QQQ",
@@ -225,6 +261,8 @@
       "% vs max 52w": -2.7,
       "% vs min 52w": 31.6,
       "% vs EMA20": 0.8,
+      "Cambio 3m": 18.9,
+      "Cambio 6m": 17.2,
       "SMA50": 714.5915588378906,
       "SMA200": 636.6321798706055,
       "RSI14": 44.8,
@@ -233,7 +271,8 @@
       "Tendencia": "alcista",
       "Banda 52w": "cerca_maximos",
       "Zona RSI": "neutral",
-      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, momentum neutral"
+      "Aviso": null,
+      "Momento": "tendencia de fondo alcista, cerca de máximos de 52 semanas, subió 17.2% en los últimos 6 meses"
     }
   ]
 }

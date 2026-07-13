@@ -266,7 +266,7 @@ footer{
 </div>
 
 <main>
-  <p class="lede">Cómo viene cada empresa que sigo, en criollo — no son recomendaciones de compra, es solo el estado de cada una hoy: <strong>qué tan lejos está de su punto más caro</strong>, si viene "caliente" (subiendo o cayendo muy rápido últimamente), y si recién cambió de dirección esta semana. <a href="guia.html" style="color:inherit">¿Cómo leo esto? →</a></p>
+  <p class="lede">Pensado para revisar <strong>una vez al mes</strong>, con la idea de sostener las compras al menos un año — no para estar mirando esto todos los días. Te marca qué empresas vale la pena mirar este mes (bajaron fuerte y no vienen de un rebote ya muy corrido) y cuáles ya subieron demasiado como para entrar con descuento. <a href="guia.html" style="color:inherit">¿Cómo leo esto? →</a></p>
 
   <div id="app">
     <div class="loading">trayendo los datos…</div>
@@ -298,24 +298,27 @@ const DRAWDOWN_PHRASE = {
   caida_profunda: 'bajó fuerte desde su máximo del último año',
 };
 
+const AVISO_TEXT = {
+  revisar_entrada: 'vale la pena mirarla este mes',
+  ya_corrio_mucho: 'ya subió bastante, sin descuento por ahora',
+};
+
 function narrativeFor(t){
   const bits = [];
   bits.push(`${TREND_PHRASE[t.Tendencia]}, y ${DRAWDOWN_PHRASE[t['Banda 52w']]} (${fmtPct(t['% vs max 52w'])})`);
-  if (t['Zona RSI'] === 'sobrecomprado') bits.push(`<span class="flag hot">venía subiendo muy rápido</span> en las últimas dos semanas — cuidado con perseguirla`);
-  else if (t['Zona RSI'] === 'sobrevendido') bits.push(`<span class="flag hot">venía cayendo muy rápido</span> en las últimas dos semanas`);
-  else bits.push(`sin nada raro en el movimiento de las últimas dos semanas`);
+  const chg = t['Cambio 6m'];
+  bits.push(`en los últimos 6 meses ${chg >= 0 ? 'subió' : 'bajó'} ${Math.abs(chg).toFixed(1)}%`);
   return bits.join('. ') + '.';
 }
 
 function tagsFor(t){
   const tags = [];
+  if (t['Aviso'] === 'revisar_entrada') tags.push(`<span class="tag cross-up">◆ ${AVISO_TEXT.revisar_entrada}</span>`);
+  if (t['Aviso'] === 'ya_corrio_mucho') tags.push(`<span class="tag overbought">◆ ${AVISO_TEXT.ya_corrio_mucho}</span>`);
   if (t['MACD cross']) {
     const up = t['MACD cross'].includes('alcista');
-    tags.push(`<span class="tag ${up ? 'cross-up' : 'cross-down'}">${up ? '↑' : '↓'} recién giró para ${up ? 'arriba' : 'abajo'}</span>`);
+    tags.push(`<span class="tag">${up ? '↑' : '↓'} recién giró para ${up ? 'arriba' : 'abajo'} (corto plazo)</span>`);
   }
-  if (t['Zona RSI'] === 'sobrecomprado') tags.push(`<span class="tag overbought">subiendo fuerte</span>`);
-  if (t['Zona RSI'] === 'sobrevendido') tags.push(`<span class="tag oversold">cayendo fuerte</span>`);
-  tags.push(`<span class="tag">vaivén diario: ${t['Volatilidad (ATR%)']}%</span>`);
   return tags.join('');
 }
 
@@ -326,13 +329,13 @@ function render(data){
   const d = new Date(data.generated_at);
   meta.innerHTML = `última corrida<br><strong>${d.toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>`;
 
-  // most-interesting-first: deep drawdown + recent cross first, near-highs last
+  // pensado para revisión mensual: primero candidatas a entrada, después ya-corrió-mucho, después el resto por profundidad de caída
   const rank = t => {
     let score = 0;
-    if (t['MACD cross']) score += 10;
+    if (t['Aviso'] === 'revisar_entrada') score += 20;
+    if (t['Aviso'] === 'ya_corrio_mucho') score += 8;
     if (t['Banda 52w'] === 'caida_profunda') score += 5;
     if (t['Banda 52w'] === 'correccion_moderada') score += 2;
-    if (t['Zona RSI'] !== 'neutral') score += 1;
     return -score;
   };
   const sorted = [...data.tickers].sort((a, b) => rank(a) - rank(b));
@@ -350,13 +353,13 @@ function render(data){
       </div>
       <div class="stat">
         <div class="drawdown ${DRAWDOWN_CLASS[t['Banda 52w']]}">${fmtPct(t['% vs max 52w'])}</div>
-        <div class="rsi">vs máx. 52w</div>
+        <div class="rsi">vs máx. 52 semanas</div>
       </div>
     </div>
   `).join('');
 
   app.innerHTML = `
-    <div class="section-label">watchlist — ${data.tickers.length} empresas</div>
+    <div class="section-label">watchlist — ${data.tickers.length} empresas · revisión mensual, horizonte ~1 año</div>
     <div class="entries">${entries}</div>
   `;
 }
