@@ -1,5 +1,11 @@
-# Señales — 2026-08-14
+# Señales — 2026-08-18
 
 Pensado para revisión mensual con horizonte de ~1 año, no para trading de corto plazo. No es recomendación de inversión.
 
-- **MELI** (Mercado Libre): vale la pena mirarla este mes para una posible entrada. Precio actual: $1828.25.
+- **AMD** (AMD): la tendencia de fondo pasó a bajista. Precio actual: $nan.
+- **AAPL** (Apple): la tendencia de fondo pasó a bajista. Precio actual: $nan.
+- **NVDA** (Nvidia): la tendencia de fondo pasó a bajista. Precio actual: $nan.
+- **AMZN** (Amazon): la tendencia de fondo pasó a bajista. Precio actual: $nan.
+- **GOOGL** (Alphabet): la tendencia de fondo pasó a bajista. Precio actual: $nan.
+- **SPY** (S&P 500 (ETF)): la tendencia de fondo pasó a bajista. Precio actual: $nan.
+- **QQQ** (Nasdaq 100 (ETF)): la tendencia de fondo pasó a bajista. Precio actual: $nan.
