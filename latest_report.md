@@ -1,5 +1,5 @@
-# Señales — 2026-08-27
+# Señales — 2026-08-28
 
 Pensado para revisión mensual con horizonte de ~1 año, no para trading de corto plazo. No es recomendación de inversión.
 
-- **MELI** (Mercado Libre): vale la pena mirarla este mes para una posible entrada. Precio actual: $1930.75.
+- **MSFT** (Microsoft): la tendencia de fondo pasó a alcista. Precio actual: $513.53.
