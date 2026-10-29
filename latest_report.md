@@ -1,5 +1,5 @@
-# Señales — 2026-10-28
+# Señales — 2026-10-29
 
 Pensado para revisión mensual con horizonte de ~1 año, no para trading de corto plazo. No es recomendación de inversión.
 
-- **META** (Meta): vale la pena mirarla este mes para una posible entrada. Precio actual: $613.54.
+- **GOOGL** (Alphabet): vale la pena mirarla este mes para una posible entrada; la tendencia de fondo pasó a bajista. Precio actual: $284.54.
