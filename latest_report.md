@@ -1,5 +1,6 @@
-# Señales — 2026-10-29
+# Señales — 2026-10-30
 
 Pensado para revisión mensual con horizonte de ~1 año, no para trading de corto plazo. No es recomendación de inversión.
 
-- **GOOGL** (Alphabet): vale la pena mirarla este mes para una posible entrada; la tendencia de fondo pasó a bajista. Precio actual: $284.54.
+- **AMD** (AMD): vale la pena mirarla este mes para una posible entrada. Precio actual: $501.25.
+- **META** (Meta): vale la pena mirarla este mes para una posible entrada. Precio actual: $619.77.
