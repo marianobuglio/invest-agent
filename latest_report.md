@@ -1,5 +1,5 @@
-# Señales — 2026-11-17
+# Señales — 2026-11-27
 
 Pensado para revisión mensual con horizonte de ~1 año, no para trading de corto plazo. No es recomendación de inversión.
 
-- **META** (Meta): vale la pena mirarla este mes para una posible entrada. Precio actual: $620.4.
+- **NVDA** (Nvidia): la tendencia de fondo pasó a bajista. Precio actual: $150.49.
